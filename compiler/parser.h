@@ -13,6 +13,8 @@
 #include "call_expr_ast.h"
 #include "prototype_expr_ast.h"
 #include "function_ast.h"
+#include "pdriver.h"
+#include "logger.h"
 
 class parser {
 public:
@@ -34,17 +36,13 @@ public:
   unique<FunctionAST> parse_top_level_expr();
 
 private:
+  Logger                                _logger;
   token                                 _curToken;
   deque<token>                          _tokens;
-  unique<llvm::LLVMContext>             _context;
-  unique<llvm::IRBuilder<>>             _builder;
-  unique<llvm::Module>                  _globalModule;
+  pdriver                               _driver;
   std::map<std::string, llvm::Value*>   _namedValues;
 
   void                  next_token();
 
-  unique<ExprAST>       log_error(const token& tok, const string &str);
-  unique<PrototypeAST>  log_error_p(const token& tok, const string &str);
-  unique<FunctionAST>   log_error_f(const token& tok, const string &str);
-  llvm::Value*          log_error_v(const string &str);
+
 };

@@ -6,6 +6,6 @@ IntegerExprAST::IntegerExprAST(string pValue)
 
 }
 
-llvm::Value* IntegerExprAST::generate_code(llvm::LLVMContext& context) {
-	return llvm::ConstantInt::get(context, llvm::APInt(64, _value, 10));
+llvm::Value* IntegerExprAST::generate_code(pdriver& driver) {
+	return llvm::ConstantInt::get(driver.context, llvm::APInt(INTEGER_BIT_SIZE, _value, INTEGER_RADIX));
 }

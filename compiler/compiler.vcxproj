@@ -25,10 +25,13 @@
     <ClInclude Include="function_ast.h" />
     <ClInclude Include="integer_expr_ast.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="pdriver.h" />
     <ClInclude Include="prototype_expr_ast.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="variable_expr_ast.h" />
+    <ClInclude Include="_defs.h" />
     <ClInclude Include="_global.h" />
     <ClInclude Include="_llvm.h" />
   </ItemGroup>
@@ -38,6 +41,7 @@
     <ClCompile Include="function_ast.cpp" />
     <ClCompile Include="integer_expr_ast.cpp" />
     <ClCompile Include="lexer.cpp" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="prototype_expr_ast.cpp" />

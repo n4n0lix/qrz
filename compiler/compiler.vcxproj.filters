@@ -57,6 +57,15 @@
     <ClInclude Include="function_ast.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
+    <ClInclude Include="_defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pdriver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lexer.cpp">
@@ -88,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="function_ast.cpp">
       <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,10 +5,6 @@ void parser::parse(deque<token> pTokens) {
 
   // Initializing
   _tokens = std::move(pTokens);
-  _context = std::make_unique<llvm::LLVMContext>();
-  _builder = std::make_unique<llvm::IRBuilder<>>( *_context );
-  _globalModule = std::make_unique<llvm::Module>( "global", *_context );
-  _namedValues = std::map<std::string, llvm::Value*>();
 
   /// top ::= definition | external | expression | ';'
   next_token(); // mvoe to first token
@@ -266,29 +262,4 @@ unique<FunctionAST> parser::parse_top_level_expr() {
   // Create anonymous function
   auto prototype = std::make_unique<PrototypeAST>( string(""), vector<string>() );
   return std::make_unique<FunctionAST>( std::move(prototype), std::move(expr) );
-}
-
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/*              Error handling              */
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-unique<ExprAST> parser::log_error(const token& tok, const string &str){
-  std::cout << "error: " << str << " @" << std::to_string(tok.line_no) << ":" << std::to_string(tok.line_pos) << "\n";
-  return nullptr;
-};
-
-unique<PrototypeAST> parser::log_error_p(const token& tok, const string &str){
-  log_error(tok, str);
-  return nullptr;
-};
-
-unique<FunctionAST> parser::log_error_f(const token& tok, const string &str){
-  log_error(tok, str);
-  return nullptr;
-};
-
-llvm::Value* parser::log_error_v(const string &str) {
-  std::cout << "error: " << str << "\n";
-  return nullptr;
 }
