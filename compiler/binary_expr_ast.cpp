@@ -20,8 +20,9 @@ llvm::Value* BinaryExprAST::generate_code(pdriver& driver) {
     return driver.builder.CreateFSub(left, right, "subtmp");
   case OP_MULTIPLY: // *
     return driver.builder.CreateFMul(left, right, "multmp");
-    ... left of here: llvm expects always two operands have same type, and result has same type as well
-        but how are we then handling for example  var1(4) < var2(5) = true?
+    //... TODO: left of here: llvm expects always two operands have same type, and result has same type as well
+    //    but how are we then handling for example  var1(4) < var2(5) = true?
+    //  basti: lets convert it to integer for now, we'll convert it to bool later
   case OP_LESS_THAN: // <
     left = driver.builder.CreateFCmpULT(left, right, "cmptmp");
     // Convert bool 0/1 to double 0.0 or 1.0

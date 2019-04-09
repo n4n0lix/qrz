@@ -3,6 +3,7 @@
 #include "_global.h"
 #include "_llvm.h"
 #include "_defs.h"
+#include "logger.h"
 
 #include "expr_ast.h"
 #include "pdriver.h"

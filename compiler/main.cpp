@@ -1,9 +1,12 @@
+#include "_global.h"
+#include "_defs.h"
+
 #include "lexer.h"
 #include "parser.h"
 
 int main()
 {
-  std::cout << "LUL" << std::endl;
+  print_defs();
 
   lexer lexer;
   auto tokens = lexer.scan("test.q");

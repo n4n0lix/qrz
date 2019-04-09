@@ -36,7 +36,6 @@ public:
   unique<FunctionAST> parse_top_level_expr();
 
 private:
-  Logger                                _logger;
   token                                 _curToken;
   deque<token>                          _tokens;
   pdriver                               _driver;

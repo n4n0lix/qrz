@@ -106,5 +106,6 @@
     <None Include="test.q">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

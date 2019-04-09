@@ -34,7 +34,7 @@ deque<token> lexer::scan(string path)
 		_input.append("\n");
 	}
 
-	std::cout << "\t\tLEXER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
+	std::cout << "\n\t\tLEXER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
 
 	while (_input.size() > 0) {
 		bool matched = false;

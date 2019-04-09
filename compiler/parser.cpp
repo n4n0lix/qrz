@@ -1,7 +1,7 @@
 #include "parser.h"
 
 void parser::parse(deque<token> pTokens) {
-  std::cout << "\t\tPARSER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
+  std::cout << "\n\t\tPARSER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
 
   // Initializing
   _tokens = std::move(pTokens);
