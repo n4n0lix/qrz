@@ -5,7 +5,7 @@ IntegerExprAST::IntegerExprAST(string pValue)
 {
 
 }
-//... left of here: write tests with gtest/googletest
+
 llvm::Value* IntegerExprAST::generate_code(pdriver& driver) {
   int64 value;
   try { 

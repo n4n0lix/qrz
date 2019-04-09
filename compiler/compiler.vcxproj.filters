@@ -19,6 +19,18 @@
     <Filter Include="Source Files\ast">
       <UniqueIdentifier>{05bbb495-b232-40b8-bc38-0c3525ba0057}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{3eda6215-4d72-4e4c-9a1e-0a380fb5e52d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utils\cli">
+      <UniqueIdentifier>{e9d26531-0ec2-42f6-86cd-9673768bfb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Files">
+      <UniqueIdentifier>{6ebf591d-c14c-4862-ae2a-2649424833fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Files\ast">
+      <UniqueIdentifier>{776baa10-a847-4992-908b-cc4571dce2db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_global.h">
@@ -66,6 +78,12 @@
     <ClInclude Include="logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="clara_textflow.h">
+      <Filter>Header Files\utils\cli</Filter>
+    </ClInclude>
+    <ClInclude Include="clara.h">
+      <Filter>Header Files\utils\cli</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lexer.cpp">
@@ -100,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="logger.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="integer_expr_ast_test.cpp">
+      <Filter>Test Files\ast</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
