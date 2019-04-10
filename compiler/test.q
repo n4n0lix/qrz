@@ -1,5 +1,4 @@
-func add()
-  5 + 3 * 2
-7 - 4 / 2
+func add(a)
+  a + 1 - 2 
 
-add()
+3 + 4

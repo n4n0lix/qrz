@@ -6,18 +6,18 @@ CallExprAST::CallExprAST(string &pCallee, vector<unique<ExprAST>> pArgs)
 
 }
 
-llvm::Value* CallExprAST::generate_code(pdriver& driver) {
+Value* CallExprAST::generate_code(pdriver& driver) {
   // Look up the name in the global module table.
-  llvm::Function* calleeFunc = driver.globalModule.getFunction( _callee );
+  Function* calleeFunc = driver.globalModule.getFunction( _callee );
   if (!calleeFunc)
-    return log_error_v("unknown function `" + _callee + "` referenced");
+    return (Value*)log_error("unknown function `" + _callee + "` referenced");
 
   // Argument amount missmatch
   if (calleeFunc->arg_size() != _args.size())
-    return log_error_v("expected #args: " + std::to_string(_args.size()) + ", but found: " + std::to_string(calleeFunc->arg_size()));
+    return (Value*)log_error("expected #args: " + std::to_string(_args.size()) + ", but found: " + std::to_string(calleeFunc->arg_size()));
 
   // Generate list of argument values
-  std::vector<llvm::Value*> argsV;
+  std::vector<Value*> argsV;
   for (int32 i = 0; i < _args.size(); i++) {
     auto value = _args[i]->generate_code(driver);
 

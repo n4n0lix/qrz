@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <cassert>
 
 #include <cstdint>
 using int32  = int32_t;

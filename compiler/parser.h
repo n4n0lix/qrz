@@ -30,9 +30,14 @@ public:
   unique<ExprAST> parse_binary_ops_rhs(int precedence, unique<ExprAST> lhs);
   
   unique<PrototypeAST> parse_prototype();
+
+  void                 handle_extern();
   unique<PrototypeAST> parse_extern();
   
+  void                handle_function();
   unique<FunctionAST> parse_function();
+
+  void                handle_top_level_expr();
   unique<FunctionAST> parse_top_level_expr();
 
 private:

@@ -6,11 +6,11 @@ VariableExprAST::VariableExprAST(const string pName)
 
 }
 
-llvm::Value* VariableExprAST::generate_code(pdriver& driver) {
+Value* VariableExprAST::generate_code(pdriver& driver) {
   llvm::Value* var = driver.namedValues[_name];
 
   if (var == nullptr)
-    log_error_v("unkown variable `" + _name + "`");
+    (Value*)log_error("unkown variable `" + _name + "`");
 
 	return var;
 }

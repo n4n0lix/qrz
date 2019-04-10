@@ -12,11 +12,11 @@ llvm::Value* IntegerExprAST::generate_code(pdriver& driver) {
     value = std::stoll( _value );
   } 
   catch (const std::out_of_range& e) {
-    return log_error_v("int can only hold values inside [" + std::to_string(INT_MIN_VALUE) + "," + std::to_string(INT_MAX_VALUE) + "], but found value `" + _value + "`");
+    return log_error("int can only hold values inside [" + std::to_string(INT_MIN_VALUE) + "," + std::to_string(INT_MAX_VALUE) + "], but found value `" + _value + "`");
   }
   catch (const std::invalid_argument& e) {
-    return log_error_v("`" + _value + "` is not a valid int");
+    return log_error("`" + _value + "` is not a valid int");
   }
-  
+
 	return llvm::ConstantInt::get(driver.context, llvm::APSInt::get(value));
 }

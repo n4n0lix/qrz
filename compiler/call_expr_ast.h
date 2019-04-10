@@ -7,6 +7,8 @@
 #include "expr_ast.h"
 #include "pdriver.h"
 
+using namespace llvm;
+
 class CallExprAST : public ExprAST {
 public:
 	CallExprAST(string &pCallee, vector<unique<ExprAST>> pArgs);

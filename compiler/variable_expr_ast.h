@@ -8,6 +8,8 @@
 #include "expr_ast.h"
 #include "pdriver.h"
 
+using namespace llvm;
+
 class VariableExprAST : public ExprAST {
 
 public:

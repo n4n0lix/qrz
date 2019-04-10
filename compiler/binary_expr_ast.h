@@ -9,6 +9,8 @@
 #include "expr_ast.h"
 #include "pdriver.h"
 
+using namespace llvm;
+
 class BinaryExprAST : public ExprAST {
 public:
 	BinaryExprAST(token pToken, unique<ExprAST> pLeft, unique<ExprAST> pRight);

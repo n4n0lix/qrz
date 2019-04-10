@@ -12,20 +12,19 @@ void parser::parse(deque<token> pTokens) {
     std::cout << (_tokens.size()+1) << " tokens left\n";
     switch(_curToken.type) {
       case FUNC:
-        parse_function();
+        handle_function();
         break;
       case EXTERN:
-        parse_extern();
+        handle_extern();
         break;
       default:
-        parse_top_level_expr();
+        handle_top_level_expr();
         break;
     }
   } while(!_tokens.empty());
 
   std::cout << "\nvalid input!\n";
-
-  // TODO: delete pointers from _namedValues
+  _driver.globalModule.print(llvm::errs(), nullptr);
 };
 
 void parser::next_token() {
@@ -184,21 +183,21 @@ unique<ExprAST> parser::parse_binary_ops_rhs(int exprPrec, unique<ExprAST> lhs) 
 unique<PrototypeAST> parser::parse_prototype() {
   // FUNC NAME
   if (_curToken.type != IDENTIFIER)
-    return log_error_p(_curToken, "expected identifier in function declaration");
+    return log_error(_curToken, "expected identifier in function declaration");
 
   string fnName = _curToken.value;
   next_token(); // Eat func name 'identifier'
 
   // '('
   if (_curToken.type != LEFT_PARENTHESIS)
-    return log_error_p(_curToken, "expected '(' in function declaration");
+    return log_error(_curToken, "expected '(' in function declaration");
   next_token(); 
 
   // FUNC ARG NAMES
   vector<string> argNames;
   while (_curToken.type != RIGHT_PARENTHESIS) {
     if (_curToken.type != IDENTIFIER)
-      return log_error_p(_curToken, "expected identifier as function argument");
+      return log_error(_curToken, "expected identifier as function argument");
     
     auto argName = _curToken.value;
     argNames.push_back(argName);
@@ -207,7 +206,7 @@ unique<PrototypeAST> parser::parse_prototype() {
     next_token();
 
     if (_curToken.type != COMMA && _curToken.type != RIGHT_PARENTHESIS) {
-      return log_error_p(_curToken, "expected ',' or ')' in function argument list");
+      return log_error(_curToken, "expected ',' or ')' in function argument list");
     }
 
     // ',' 
@@ -221,10 +220,25 @@ unique<PrototypeAST> parser::parse_prototype() {
   return std::make_unique<PrototypeAST>( fnName, argNames );
 }
 
+void parser::handle_function()
+{
+  if (auto funcAst = parse_function()) {
+    if (auto* irFunc = funcAst->generate_code( _driver )) {
+      fprintf(stderr, "Read function definition:");
+      irFunc->print(errs());
+      fprintf(stderr, "\n");
+    }
+  }
+  else {
+    // Something went wrong: skip this token
+    next_token();
+  }
+}
+
 /// definition ::= 'func' prototype expression
 unique<FunctionAST> parser::parse_function() {
   if (_curToken.type != FUNC)
-    return log_error_f(_curToken, "parser error: only call `parse_function` when `func` token encountered!");
+    return log_error(_curToken, "parser error: only call `parse_function` when `func` token encountered!");
 
   // 'func'
   next_token();
@@ -242,15 +256,46 @@ unique<FunctionAST> parser::parse_function() {
   return std::make_unique<FunctionAST>( std::move(prototype), std::move(expr) );
 }
 
+void parser::handle_extern()
+{
+  if (auto protoAST = parse_extern()) {
+    if (auto *ir = protoAST->generate_code( _driver )) {
+      fprintf(stderr, "Read extern: ");
+      ir->print(errs());
+      fprintf(stderr, "\n");
+    }
+  }
+  else {
+    // Something went wrong: skip this token
+    next_token();
+  }
+}
+
 /// external ::= 'extern' prototype
 unique<PrototypeAST> parser::parse_extern() {
   if (_curToken.type != EXTERN)
-    return log_error_p(_curToken, "parser error: only call `parse_extern` when `extern` token encountered!");
+    return log_error(_curToken, "parser error: only call `parse_extern` when `extern` token encountered!");
 
   // 'extern'
   next_token();
 
   return parse_prototype();
+}
+
+void parser::handle_top_level_expr()
+{
+  // Evaluate a top-level expression into an anonymous function.
+  if (auto funcAST = parse_top_level_expr()) {
+    if (auto *ir = funcAST->generate_code( _driver )) {
+      fprintf(stderr, "Read top-level expression:");
+      ir->print(errs());
+      fprintf(stderr, "\n");
+    }
+  }
+  else {
+    // Something went wrong: skip this token
+    next_token();
+  }
 }
 
 unique<FunctionAST> parser::parse_top_level_expr() {

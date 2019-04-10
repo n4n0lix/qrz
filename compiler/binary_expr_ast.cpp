@@ -15,15 +15,15 @@ llvm::Value* BinaryExprAST::generate_code(pdriver& driver) {
 
   switch (_token.type) {
   case OP_PLUS: // +
-    return driver.builder.CreateFAdd(left, right, "addtmp");
+    return driver.builder.CreateAdd(left, right, "addtmp");
   case OP_MINUS: // -
-    return driver.builder.CreateFSub(left, right, "subtmp");
+    return driver.builder.CreateSub(left, right, "subtmp");
   case OP_MULTIPLY: // *
-    return driver.builder.CreateFMul(left, right, "multmp");
+    return driver.builder.CreateMul(left, right, "multmp");
   case OP_LESS_THAN: // <
-    return driver.builder.CreateFCmpULT(left, right, "cmptmp");
+    return driver.builder.CreateICmpULT(left, right, "cmptmp");
   default:
-    return log_error_v("invalid binary operator `" + _token.value + "`");
+    return (Value*)log_error("invalid binary operator `" + _token.value + "`");
   }
 }
 
