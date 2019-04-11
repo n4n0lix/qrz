@@ -13,7 +13,7 @@ class FunctionAST {
 public:
 	FunctionAST(unique<PrototypeAST> pProto, unique<ExprAST> pBody);
 	
-  Function* generate_code(pdriver&);
+  Function* generate_code(ParserContext&);
 
 private:
 	unique<PrototypeAST> _funcPrototype;

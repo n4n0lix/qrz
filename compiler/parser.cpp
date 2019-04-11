@@ -1,10 +1,11 @@
 #include "parser.h"
 
-void parser::parse(deque<token> pTokens) {
+void Parser::parse(deque<token> pTokens, not_null<ParserContext*> ctx) {
   std::cout << "\n\t\tPARSER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
 
   // Initializing
   _tokens = std::move(pTokens);
+  _ctx = ctx;
 
   /// top ::= definition | external | expression | ';'
   next_token(); // mvoe to first token
@@ -24,10 +25,10 @@ void parser::parse(deque<token> pTokens) {
   } while(!_tokens.empty());
 
   std::cout << "\nvalid input!\n";
-  _driver.globalModule.print(llvm::errs(), nullptr);
-};
+  _ctx->globalModule.print(llvm::errs(), nullptr);
+}
 
-void parser::next_token() {
+void Parser::next_token() {
   if (!_tokens.empty()) {
     _curToken = _tokens.front();
     _tokens.pop_front();
@@ -43,7 +44,7 @@ void parser::next_token() {
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// int_expr ::= int
-unique<ExprAST> parser::parse_integer_expr() {
+unique<ExprAST> Parser::parse_integer_expr() {
   // int
   auto result = std::make_unique<IntegerExprAST>( _curToken.value );
   next_token();
@@ -53,7 +54,7 @@ unique<ExprAST> parser::parse_integer_expr() {
 };
 
 /// paren_expr ::= ( expr )
-unique<ExprAST> parser::parse_parenthesis_expr() {
+unique<ExprAST> Parser::parse_parenthesis_expr() {
   // '('
   auto lhsParen = _curToken;
   next_token(); 
@@ -75,7 +76,7 @@ unique<ExprAST> parser::parse_parenthesis_expr() {
 /// identifier_expr
 ///   ::= identifier
 ///   ::= identifier '(' expr* ')'
-unique<ExprAST> parser::parse_identifier_expr() {
+unique<ExprAST> Parser::parse_identifier_expr() {
   // identifier
   string idName = _curToken.value;
   next_token();
@@ -119,7 +120,7 @@ unique<ExprAST> parser::parse_identifier_expr() {
 ///   ::= identifier_expr
 ///   ::= int_expr
 ///   ::= paren_expr
-unique<ExprAST> parser::parse_primary() {
+unique<ExprAST> Parser::parse_primary() {
   switch (_curToken.type) {
     case IDENTIFIER:
       return parse_identifier_expr();
@@ -135,7 +136,7 @@ unique<ExprAST> parser::parse_primary() {
 /// expression
 ///   ::= primary binary_ops_rhs
 ///
-unique<ExprAST> parser::parse_expr() {
+unique<ExprAST> Parser::parse_expr() {
   std::cout << "~ expr\n"; 
   auto lhs = parse_primary();
 
@@ -148,7 +149,7 @@ unique<ExprAST> parser::parse_expr() {
 
 /// binoprhs
 ///   ::= ('+' primary)*
-unique<ExprAST> parser::parse_binary_ops_rhs(int exprPrec, unique<ExprAST> lhs) {
+unique<ExprAST> Parser::parse_binary_ops_rhs(int exprPrec, unique<ExprAST> lhs) {
   while(1) {
     auto tokenPrec = _curToken.get_precedence();
     
@@ -180,7 +181,7 @@ unique<ExprAST> parser::parse_binary_ops_rhs(int exprPrec, unique<ExprAST> lhs) 
 
 /// prototype
 ///   ::= id '(' id* ')'
-unique<PrototypeAST> parser::parse_prototype() {
+unique<PrototypeAST> Parser::parse_prototype() {
   // FUNC NAME
   if (_curToken.type != IDENTIFIER)
     return log_error(_curToken, "expected identifier in function declaration");
@@ -220,10 +221,10 @@ unique<PrototypeAST> parser::parse_prototype() {
   return std::make_unique<PrototypeAST>( fnName, argNames );
 }
 
-void parser::handle_function()
+void Parser::handle_function()
 {
   if (auto funcAst = parse_function()) {
-    if (auto* irFunc = funcAst->generate_code( _driver )) {
+    if (auto* irFunc = funcAst->generate_code( *_ctx )) {
       fprintf(stderr, "Read function definition:");
       irFunc->print(errs());
       fprintf(stderr, "\n");
@@ -236,7 +237,7 @@ void parser::handle_function()
 }
 
 /// definition ::= 'func' prototype expression
-unique<FunctionAST> parser::parse_function() {
+unique<FunctionAST> Parser::parse_function() {
   if (_curToken.type != FUNC)
     return log_error(_curToken, "parser error: only call `parse_function` when `func` token encountered!");
 
@@ -256,10 +257,10 @@ unique<FunctionAST> parser::parse_function() {
   return std::make_unique<FunctionAST>( std::move(prototype), std::move(expr) );
 }
 
-void parser::handle_extern()
+void Parser::handle_extern()
 {
   if (auto protoAST = parse_extern()) {
-    if (auto *ir = protoAST->generate_code( _driver )) {
+    if (auto *ir = protoAST->generate_code( *_ctx )) {
       fprintf(stderr, "Read extern: ");
       ir->print(errs());
       fprintf(stderr, "\n");
@@ -272,7 +273,7 @@ void parser::handle_extern()
 }
 
 /// external ::= 'extern' prototype
-unique<PrototypeAST> parser::parse_extern() {
+unique<PrototypeAST> Parser::parse_extern() {
   if (_curToken.type != EXTERN)
     return log_error(_curToken, "parser error: only call `parse_extern` when `extern` token encountered!");
 
@@ -282,11 +283,11 @@ unique<PrototypeAST> parser::parse_extern() {
   return parse_prototype();
 }
 
-void parser::handle_top_level_expr()
+void Parser::handle_top_level_expr()
 {
   // Evaluate a top-level expression into an anonymous function.
   if (auto funcAST = parse_top_level_expr()) {
-    if (auto *ir = funcAST->generate_code( _driver )) {
+    if (auto *ir = funcAST->generate_code( *_ctx )) {
       fprintf(stderr, "Read top-level expression:");
       ir->print(errs());
       fprintf(stderr, "\n");
@@ -298,7 +299,7 @@ void parser::handle_top_level_expr()
   }
 }
 
-unique<FunctionAST> parser::parse_top_level_expr() {
+unique<FunctionAST> Parser::parse_top_level_expr() {
   auto expr = parse_expr();
   // error
   if (expr == nullptr)

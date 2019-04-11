@@ -3,7 +3,7 @@
 #include "_global.h"
 #include "_llvm.h"
 
-#include "pdriver.h"
+#include "parser_context.h"
 
 using namespace llvm;
 
@@ -11,7 +11,7 @@ class PrototypeAST {
 public:
 	PrototypeAST(string pName, vector<string> pArgs);
 
-  llvm::Function* generate_code(pdriver&);
+  llvm::Function* generate_code(ParserContext&);
   string get_name();
 
 private:

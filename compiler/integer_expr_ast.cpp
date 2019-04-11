@@ -6,7 +6,7 @@ IntegerExprAST::IntegerExprAST(string pValue)
 
 }
 
-llvm::Value* IntegerExprAST::generate_code(pdriver& driver) {
+llvm::Value* IntegerExprAST::generate_code(ParserContext& driver) {
   int64 value;
   try { 
     value = std::stoll( _value );

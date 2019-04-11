@@ -6,7 +6,7 @@ CallExprAST::CallExprAST(string &pCallee, vector<unique<ExprAST>> pArgs)
 
 }
 
-Value* CallExprAST::generate_code(pdriver& driver) {
+Value* CallExprAST::generate_code(ParserContext& driver) {
   // Look up the name in the global module table.
   Function* calleeFunc = driver.globalModule.getFunction( _callee );
   if (!calleeFunc)

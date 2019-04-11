@@ -31,6 +31,9 @@
     <Filter Include="Test Files\ast">
       <UniqueIdentifier>{776baa10-a847-4992-908b-cc4571dce2db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{76e88c23-349c-4960-9798-ba6e04162782}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_global.h">
@@ -72,9 +75,6 @@
     <ClInclude Include="_defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pdriver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -83,6 +83,15 @@
     </ClInclude>
     <ClInclude Include="clara.h">
       <Filter>Header Files\utils\cli</Filter>
+    </ClInclude>
+    <ClInclude Include="parser_context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="file_utils.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="str_utils.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="integer_expr_ast_test.cpp">
       <Filter>Test Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="file_utils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="str_utils.cpp">
+      <Filter>Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

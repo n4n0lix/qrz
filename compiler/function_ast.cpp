@@ -6,7 +6,7 @@ FunctionAST::FunctionAST(unique<PrototypeAST> pProto, unique<ExprAST> pBody)
 
 }
 
-Function* FunctionAST::generate_code(pdriver& driver)
+Function* FunctionAST::generate_code(ParserContext& driver)
 {
   // Check if function was defined extern
   Function* func = driver.globalModule.getFunction( _funcPrototype->get_name() );

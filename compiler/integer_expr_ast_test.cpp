@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 
 #include "integer_expr_ast.h"
-#include "pdriver.h"
+#include "parser_context.h"
 
 TEST(IntegerExprAst, valid_value_generates_a_llvm_value) {
-  pdriver driver;
+  ParserContext driver;
 
   auto max_value = IntegerExprAST("9223372036854775807");
   auto min_value = IntegerExprAST("-9223372036854775808");
@@ -18,7 +18,7 @@ TEST(IntegerExprAst, valid_value_generates_a_llvm_value) {
 }
 
 TEST(IntegerExprAst, invalid_value_fails_to_generate_a_llvm_value) {
-  pdriver driver;
+  ParserContext driver;
 
   auto too_big   = IntegerExprAST("9223372036854775808");
   auto too_small = IntegerExprAST("-9223372036854775809");

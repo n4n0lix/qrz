@@ -6,7 +6,7 @@ PrototypeAST::PrototypeAST(string pName, vector<string> pArgs)
 
 }
 
-Function * PrototypeAST::generate_code(pdriver& driver)
+Function * PrototypeAST::generate_code(ParserContext& driver)
 {
   // Create function
   std::vector<Type*> argTypes(_argNames.size(), Type::getInt64Ty( driver.context ));

@@ -2,30 +2,23 @@
 
 #include "_global.h"
 
-#include <fstream>
-#include <sstream>
 #include <regex>
 
 #include "token.h"
+#include "str_utils.h"
 
 
-struct ldriver {
+struct LexerContext {
 	int32 cur_line_no = 0;
 	int32 cur_line_pos = 0;
   string cur_file = "";
 };
 
-class lexer
+class Lexer
 {
 public:
-	deque<token>  scan(string path);
+  static deque<token>  scan(string path, string location);
 
 private:
-	deque<token>	_tokens;
-	ldriver			  _driver;
-	string			  _input;
-
-	bool		      handle(string pRegex, std::function<token_type(ldriver&)> func);
-	std::string		load_file(string path);
-	bool			    str_ends_with(const string &str, const string &ending);
+  static bool		      handle(string pRegex, std::function<token_type(LexerContext&)> func, LexerContext&, string&, deque<token>&);
 };

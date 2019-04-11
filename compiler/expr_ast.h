@@ -3,10 +3,10 @@
 #include "_global.h"
 #include "_llvm.h"
 
-#include "pdriver.h"
+#include "parser_context.h"
 
 class ExprAST {
   public:
     virtual ~ExprAST() {}
-    virtual llvm::Value* generate_code( pdriver& ) = 0;
+    virtual llvm::Value* generate_code( ParserContext& ) = 0;
 };

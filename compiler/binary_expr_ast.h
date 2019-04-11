@@ -7,7 +7,7 @@
 
 #include "token.h"
 #include "expr_ast.h"
-#include "pdriver.h"
+#include "parser_context.h"
 
 using namespace llvm;
 
@@ -15,7 +15,7 @@ class BinaryExprAST : public ExprAST {
 public:
 	BinaryExprAST(token pToken, unique<ExprAST> pLeft, unique<ExprAST> pRight);
 
-	llvm::Value* ExprAST::generate_code( pdriver& ) override;
+	llvm::Value* ExprAST::generate_code( ParserContext& ) override;
 private:
 	token _token;
 	unique<ExprAST> _left;

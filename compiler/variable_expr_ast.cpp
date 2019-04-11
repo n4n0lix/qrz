@@ -6,7 +6,7 @@ VariableExprAST::VariableExprAST(const string pName)
 
 }
 
-Value* VariableExprAST::generate_code(pdriver& driver) {
+Value* VariableExprAST::generate_code(ParserContext& driver) {
   llvm::Value* var = driver.namedValues[_name];
 
   if (var == nullptr)

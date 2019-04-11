@@ -3,6 +3,8 @@
 #include "_global.h"
 #include "_llvm.h"
 
+#include "gsl/gsl"
+
 #include "token.h"
 
 #include "ast.h"
@@ -13,14 +15,15 @@
 #include "call_expr_ast.h"
 #include "prototype_expr_ast.h"
 #include "function_ast.h"
-#include "pdriver.h"
+#include "parser_context.h"
 #include "logger.h"
 
-class parser {
+using namespace gsl;
+
+class Parser {
 public:
 
-  void    parse(deque<token> pTokens);
-
+  void    parse( deque<token>, not_null<ParserContext*> );
 
   unique<ExprAST> parse_integer_expr();
   unique<ExprAST> parse_parenthesis_expr();
@@ -43,7 +46,7 @@ public:
 private:
   token                                 _curToken;
   deque<token>                          _tokens;
-  pdriver                               _driver;
+  ParserContext*                        _ctx;
   std::map<std::string, llvm::Value*>   _namedValues;
 
   void                  next_token();

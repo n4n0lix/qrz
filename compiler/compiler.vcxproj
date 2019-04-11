@@ -24,13 +24,15 @@
     <ClInclude Include="clara.h" />
     <ClInclude Include="clara_textflow.h" />
     <ClInclude Include="expr_ast.h" />
+    <ClInclude Include="file_utils.h" />
     <ClInclude Include="function_ast.h" />
     <ClInclude Include="integer_expr_ast.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="parser.h" />
-    <ClInclude Include="pdriver.h" />
+    <ClInclude Include="parser_context.h" />
     <ClInclude Include="prototype_expr_ast.h" />
+    <ClInclude Include="str_utils.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="variable_expr_ast.h" />
     <ClInclude Include="_defs.h" />
@@ -40,6 +42,7 @@
   <ItemGroup>
     <ClCompile Include="binary_expr_ast.cpp" />
     <ClCompile Include="call_expr_ast.cpp" />
+    <ClCompile Include="file_utils.cpp" />
     <ClCompile Include="function_ast.cpp" />
     <ClCompile Include="integer_expr_ast.cpp" />
     <ClCompile Include="integer_expr_ast_test.cpp" />
@@ -48,6 +51,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="prototype_expr_ast.cpp" />
+    <ClCompile Include="str_utils.cpp" />
     <ClCompile Include="token.cpp" />
     <ClCompile Include="variable_expr_ast.cpp" />
   </ItemGroup>
@@ -132,7 +136,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\qrz\dependencies\include;D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -154,7 +158,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\qrz\dependencies\include;D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -178,7 +182,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\qrz\dependencies\include;D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -204,7 +208,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\qrz\dependencies\include;D:\Programming\gtest\include;D:\Programming\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
