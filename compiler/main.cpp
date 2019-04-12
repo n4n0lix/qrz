@@ -16,7 +16,7 @@ int exec_interactive();
 int main(int argc, char *argv[])
 {
   string command = "compile";
-  string file;
+  string file = "test.q";
 
   auto cli
     = clara::Opt(file, "file")
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
   // COMPILE
   else if (command == "compile") {
-    return exec_compile("test.q");
+    return exec_compile( file );
   }
 
   // INTERACTIVE

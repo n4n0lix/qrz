@@ -49,7 +49,7 @@ private:
   ParserContext*                        _ctx;
   std::map<std::string, llvm::Value*>   _namedValues;
 
-  void                  next_token();
+  void                next_token();
 
 
 };

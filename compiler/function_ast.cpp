@@ -33,12 +33,14 @@ Function* FunctionAST::generate_code(ParserContext& driver)
   for (auto& arg : func->args())
     driver.namedValues[arg.getName()] = &arg;
 
-  if (Value *returnVal = _funcBody->generate_code( driver )) {
+  if (Value *body = _funcBody->generate_code( driver )) {
     // Finish off the function.
-    driver.builder.CreateRet( returnVal );
+    driver.builder.CreateRet( body );
 
     // Validate the generated code, checking for consistency.
-    verifyFunction( *func );
+    llvm::verifyFunction( *func );
+
+    driver.funcOptimizer.run( *func );
 
     return func;
   }
