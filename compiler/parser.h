@@ -2,6 +2,7 @@
 
 #include "_global.h"
 #include "_llvm.h"
+#include "logger.h"
 
 #include "gsl/gsl"
 
@@ -17,11 +18,21 @@
 #include "function_ast.h"
 #include "parser_context.h"
 #include "logger.h"
+#include "jit.h"
+
+#include "llvm/Support/TargetSelect.h"
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Transforms/InstCombine/InstCombine.h"
+#include "llvm/Transforms/Scalar.h"
+#include "llvm/Transforms/Scalar/GVN.h"
 
 using namespace gsl;
 
 class Parser {
 public:
+
+  Parser();
+  virtual ~Parser() = default;
 
   void    parse( deque<token>, not_null<ParserContext*> );
 
@@ -43,13 +54,10 @@ public:
   void                handle_top_level_expr();
   unique<FunctionAST> parse_top_level_expr();
 
-private:
-  token                                 _curToken;
-  deque<token>                          _tokens;
-  ParserContext*                        _ctx;
-  std::map<std::string, llvm::Value*>   _namedValues;
-
   void                next_token();
 
-
+private:
+  token                           _curToken;
+  deque<token>                    _tokens;
+  ParserContext*                  _context;
 };

@@ -15,7 +15,7 @@ class VariableExprAST : public ExprAST {
 public:
 	VariableExprAST(const string pName);
 
-	virtual llvm::Value* generate_code( ParserContext& ) override;
+	virtual Value* generate_code( ParserContext& ) override;
 private:
 	string _name;
 

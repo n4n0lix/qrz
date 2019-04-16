@@ -7,7 +7,7 @@ VariableExprAST::VariableExprAST(const string pName)
 }
 
 Value* VariableExprAST::generate_code(ParserContext& driver) {
-  llvm::Value* var = driver.namedValues[_name];
+  Value* var = driver.namedValues[_name];
 
   if (var == nullptr)
     (Value*)log_error("unkown variable `" + _name + "`");

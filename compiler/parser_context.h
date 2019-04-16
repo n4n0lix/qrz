@@ -3,35 +3,31 @@
 #include "_global.h"
 #include "_llvm.h"
 
+#include "jit.h"
+
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/Transforms/InstCombine/InstCombine.h"
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Scalar/GVN.h"
 
+#include "prototype_expr_ast.h"
+
 class ParserContext {
 public:
-  ParserContext() 
-    : context(), builder(context), globalModule("global", context), funcOptimizer(&globalModule)
-  {
+  ParserContext();
+  virtual ~ParserContext() = default;
 
-    // Do simple "peephole" optimizations and bit-twiddling optzns.
-    funcOptimizer.add( llvm::createInstructionCombiningPass() );
+  llvm::Function* get_function(string funcName);
+  void            new_module(string name);
 
-    // Reassociate expressions.
-    funcOptimizer.add( llvm::createReassociatePass() );
 
-    // Eliminate Common SubExpressions.
-    funcOptimizer.add( llvm::createGVNPass() );
+  llvm::LLVMContext                         context;
+  llvm::IRBuilder<>                         builder;
 
-    // Simplify the control flow graph (deleting unreachable blocks, etc).
-    funcOptimizer.add( llvm::createCFGSimplificationPass() );
+  std::map<std::string, llvm::Value*>           namedValues;
+  std::map<std::string, unique<PrototypeAST>>   funcPrototypes;
 
-    funcOptimizer.doInitialization();
-  }
-
-  llvm::LLVMContext                     context;
-  llvm::IRBuilder<>                     builder;
-  llvm::Module                          globalModule;
-  std::map<std::string, llvm::Value*>   namedValues;
-  llvm::legacy::FunctionPassManager     funcOptimizer;
+  unique<JIT>                               jit;
+  unique<llvm::Module>                      curModule;
+  unique<llvm::legacy::FunctionPassManager> curModuleFPM;
 };

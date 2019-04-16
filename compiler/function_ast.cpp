@@ -8,24 +8,16 @@ FunctionAST::FunctionAST(unique<PrototypeAST> pProto, unique<ExprAST> pBody)
 
 Function* FunctionAST::generate_code(ParserContext& driver)
 {
-  // Check if function was defined extern
-  Function* func = driver.globalModule.getFunction( _funcPrototype->get_name() );
-  bool isExternal = (func != nullptr);
-
-  // Define it if not defined extern
-  if (!isExternal)
-    func = _funcPrototype->generate_code( driver );
-  
-  // Something went wrong
-  if (func == nullptr)
+  // Transfer ownership of the prototype to the FunctionProtos map, but keep a
+  // reference to it for use below.
+  auto funcName = _funcPrototype->get_name();
+  driver.funcPrototypes[funcName] = std::move(_funcPrototype);
+  Function *func = driver.get_function(funcName);
+  if (!func)
     return nullptr;
 
-  if (!func->empty())
-    return (Function*)log_error("function `" + _funcPrototype->get_name() + "` already defined!");
-
-
   // Create a new basic block to start insertion into.
-  BasicBlock *basicBlock = BasicBlock::Create(driver.context, "entry", func);
+  BasicBlock *basicBlock = BasicBlock::Create( driver.context, "entry", func);
   driver.builder.SetInsertPoint( basicBlock );
 
   // Record the function arguments in the NamedValues map.
@@ -40,7 +32,7 @@ Function* FunctionAST::generate_code(ParserContext& driver)
     // Validate the generated code, checking for consistency.
     llvm::verifyFunction( *func );
 
-    driver.funcOptimizer.run( *func );
+    driver.curModuleFPM->run( *func );
 
     return func;
   }

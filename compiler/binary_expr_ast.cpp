@@ -6,9 +6,9 @@ BinaryExprAST::BinaryExprAST(token pToken, unique<ExprAST> pLeft, unique<ExprAST
 
 }
 
-llvm::Value* BinaryExprAST::generate_code(ParserContext& driver) {
-  llvm::Value* left = _left->generate_code( driver );
-  llvm::Value* right = _right->generate_code( driver );
+Value* BinaryExprAST::generate_code(ParserContext& driver) {
+  Value* left = _left->generate_code( driver );
+  Value* right = _right->generate_code( driver );
 
   if (left == nullptr || right == nullptr)
     return nullptr;

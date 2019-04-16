@@ -11,7 +11,7 @@ class PrototypeAST {
 public:
 	PrototypeAST(string pName, vector<string> pArgs);
 
-  llvm::Function* generate_code(ParserContext&);
+  llvm::Function* generate_code( ParserContext& );
   string get_name();
 
 private:

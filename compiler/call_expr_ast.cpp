@@ -8,7 +8,7 @@ CallExprAST::CallExprAST(string &pCallee, vector<unique<ExprAST>> pArgs)
 
 Value* CallExprAST::generate_code(ParserContext& driver) {
   // Look up the name in the global module table.
-  Function* calleeFunc = driver.globalModule.getFunction( _callee );
+  Function* calleeFunc = driver.get_function( _callee );
   if (!calleeFunc)
     return (Value*)log_error("unknown function `" + _callee + "` referenced");
 

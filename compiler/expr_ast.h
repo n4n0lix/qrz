@@ -5,8 +5,10 @@
 
 #include "parser_context.h"
 
+using namespace llvm;
+
 class ExprAST {
   public:
     virtual ~ExprAST() {}
-    virtual llvm::Value* generate_code( ParserContext& ) = 0;
+    virtual Value* generate_code( ParserContext& ) = 0;
 };

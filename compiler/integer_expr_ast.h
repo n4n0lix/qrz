@@ -8,6 +8,8 @@
 #include "expr_ast.h"
 #include "parser_context.h"
 
+using namespace llvm;
+
 class IntegerExprAST : public ExprAST {
 public:
   IntegerExprAST(string pValue);

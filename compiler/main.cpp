@@ -15,7 +15,7 @@ int exec_interactive();
 
 int main(int argc, char *argv[])
 {
-  string command = "compile";
+  string command = "interactive";
   string file = "test.q";
 
   auto cli
@@ -31,7 +31,10 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  //print_defs();
+  // INIT
+  llvm::InitializeNativeTarget();
+  llvm::InitializeNativeTargetAsmPrinter();
+  llvm::InitializeNativeTargetAsmParser();
 
   // TEST
   if (command == "test") {

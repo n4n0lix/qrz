@@ -1,16 +1,20 @@
 #include "parser.h"
 
-void Parser::parse(deque<token> pTokens, not_null<ParserContext*> ctx) {
-  std::cout << "\n\t\tPARSER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
+Parser::Parser()
+{
+}
+
+void Parser::parse(deque<token> pTokens, not_null<ParserContext*> pContext) {
+  log_parser() << "initializing with " << std::to_string(pTokens.size()) << " tokens\n";
 
   // Initializing
   _tokens = std::move(pTokens);
-  _ctx = ctx;
+  _context = pContext;
 
   /// top ::= definition | external | expression | ';'
-  next_token(); // mvoe to first token
+  next_token(); // move to first token
   do {
-    std::cout << (_tokens.size()+1) << " tokens left\n";
+    //std::cout << (_tokens.size()+1) << " tokens left\n";
     switch(_curToken.type) {
       case FUNC:
         handle_function();
@@ -24,20 +28,20 @@ void Parser::parse(deque<token> pTokens, not_null<ParserContext*> ctx) {
     }
   } while(!_tokens.empty());
 
-  std::cout << "\nvalid input!\n";
-  _ctx->globalModule.print(llvm::errs(), nullptr);
+  _context->curModule->print(log_parser(), nullptr);
+  _context->curModule->print(llvm::errs(), nullptr);
 }
 
 void Parser::next_token() {
   if (!_tokens.empty()) {
     _curToken = _tokens.front();
     _tokens.pop_front();
+    log_parser() << "token: " << _curToken.type_name() << "\n";
   } else {
     _curToken = token();
     _curToken.type = NONE;
   }
-};
-
+}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*                  Grammar                 */
@@ -112,7 +116,6 @@ unique<ExprAST> Parser::parse_identifier_expr() {
   // ')'
   next_token();
 
-
   return std::make_unique<CallExprAST>( idName, std::move(args) );
 }
 
@@ -137,7 +140,6 @@ unique<ExprAST> Parser::parse_primary() {
 ///   ::= primary binary_ops_rhs
 ///
 unique<ExprAST> Parser::parse_expr() {
-  std::cout << "~ expr\n"; 
   auto lhs = parse_primary();
 
   // error
@@ -224,7 +226,7 @@ unique<PrototypeAST> Parser::parse_prototype() {
 void Parser::handle_function()
 {
   if (auto funcAst = parse_function()) {
-    if (auto* irFunc = funcAst->generate_code( *_ctx )) {
+    if (auto* irFunc = funcAst->generate_code( *_context )) {
       fprintf(stderr, "Read function definition:");
       irFunc->print(errs());
       fprintf(stderr, "\n");
@@ -260,7 +262,7 @@ unique<FunctionAST> Parser::parse_function() {
 void Parser::handle_extern()
 {
   if (auto protoAST = parse_extern()) {
-    if (auto *ir = protoAST->generate_code( *_ctx )) {
+    if (auto *ir = protoAST->generate_code( *_context )) {
       fprintf(stderr, "Read extern: ");
       ir->print(errs());
       fprintf(stderr, "\n");
@@ -287,10 +289,32 @@ void Parser::handle_top_level_expr()
 {
   // Evaluate a top-level expression into an anonymous function.
   if (auto funcAST = parse_top_level_expr()) {
-    if (auto *ir = funcAST->generate_code( *_ctx )) {
-      fprintf(stderr, "Read top-level expression:");
-      ir->print(errs());
-      fprintf(stderr, "\n");
+    if (auto *ir = funcAST->generate_code( *_context )) {
+      //fprintf(stderr, "Read top-level expression:");
+      //ir->print(errs());
+      //fprintf(stderr, "\n");
+
+
+
+      // JIT the module containing the anonymous expression, keeping a handle so
+      // we can free it later.
+      auto moduleKey = _context->jit->add_module( std::move(_context->curModule) );
+      _context->new_module("jit");
+
+      // Search the JIT for the __anon_expr symbol.
+      auto exprSymbol = _context->jit->find_symbol("__anon_expr");
+      assert(exprSymbol && "function not found");
+
+      // Get the symbol's address and cast it to the right type (takes no
+      // arguments, returns a double) so we can call it as a native function.
+      uint64 address = exprSymbol.getAddress().get();
+      intptr_t addressPtr = (intptr_t)address;
+      int64(*func)() = (int64(*)())addressPtr;
+      auto result = func();
+      std::cout << "=> " << std::to_string( result ) << "\n";
+
+      // Delete the anonymous expression module from the JIT.
+      _context->jit->remove_module(moduleKey);
     }
   }
   else {
@@ -306,6 +330,6 @@ unique<FunctionAST> Parser::parse_top_level_expr() {
     return nullptr;
 
   // Create anonymous function
-  auto prototype = std::make_unique<PrototypeAST>( string(""), vector<string>() );
+  auto prototype = std::make_unique<PrototypeAST>( string("__anon_expr"), vector<string>() );
   return std::make_unique<FunctionAST>( std::move(prototype), std::move(expr) );
 }

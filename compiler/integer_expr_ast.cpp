@@ -6,7 +6,7 @@ IntegerExprAST::IntegerExprAST(string pValue)
 
 }
 
-llvm::Value* IntegerExprAST::generate_code(ParserContext& driver) {
+Value* IntegerExprAST::generate_code(ParserContext& driver) {
   int64 value;
   try { 
     value = std::stoll( _value );
@@ -18,5 +18,5 @@ llvm::Value* IntegerExprAST::generate_code(ParserContext& driver) {
     return log_error("`" + _value + "` is not a valid int");
   }
 
-	return llvm::ConstantInt::get(driver.context, llvm::APSInt::get(value));
+	return ConstantInt::get( driver.context, APSInt::get(value) );
 }

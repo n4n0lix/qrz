@@ -17,7 +17,7 @@ deque<token> Lexer::scan(string pInput, string location)
     input.append("\n");
   }
 
-  std::cout << "\n\t\tLEXER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
+  //std::cout << "\n\t\tLEXER\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n";
   while (input.size() > 0) {
     bool matched = false;
 
@@ -59,10 +59,10 @@ deque<token> Lexer::scan(string pInput, string location)
     LEX_RULE(".", { return NONE; })
   }
 
-  std::cout << "Num tokens: " << tokens.size() << "\n\n";
-  for (auto token : tokens) {
-    std::cout << token.type_name() << "\n";
-  }
+  //std::cout << "Num tokens: " << tokens.size() << "\n\n";
+  //for (auto token : tokens) {
+  //  std::cout << token.type_name() << "\n";
+  //}
 
   return std::move( tokens );
 }

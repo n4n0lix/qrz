@@ -7,13 +7,15 @@
 #include "expr_ast.h"
 #include "prototype_expr_ast.h"
 
+#include "parser_context.h"
+
 using namespace llvm;
 
 class FunctionAST {
 public:
 	FunctionAST(unique<PrototypeAST> pProto, unique<ExprAST> pBody);
 	
-  Function* generate_code(ParserContext&);
+  Function* generate_code( ParserContext& );
 
 private:
 	unique<PrototypeAST> _funcPrototype;

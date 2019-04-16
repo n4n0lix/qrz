@@ -10,10 +10,10 @@ Function * PrototypeAST::generate_code(ParserContext& driver)
 {
   // Create function
   std::vector<Type*> argTypes(_argNames.size(), Type::getInt64Ty( driver.context ));
-  Type* returnType = Type::getInt64Ty(driver.context);
+  Type* returnType = Type::getInt64Ty( driver.context );
 
   FunctionType* funcType = FunctionType::get( returnType, argTypes, false );
-  Function* func = Function::Create(funcType, Function::ExternalLinkage, _name, driver.globalModule );
+  Function* func = Function::Create(funcType, Function::ExternalLinkage, _name, *driver.curModule );
 
   // Set names for arguments
   assert(_argNames.size() == func->arg_size());
